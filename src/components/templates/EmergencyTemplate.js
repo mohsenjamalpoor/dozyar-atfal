@@ -23,8 +23,8 @@ import { BolusTable, InfusionTable } from "@/components/modules/DrugTables";
 import Disclaimer from "@/components/modules/Disclaimer";
 
 const MODES = [
-  { value: "bolus", label: "STAT BOLUS", icon: <FaBolt />, tone: "red" },
   { value: "infusion", label: "INFUSION", icon: <FaDroplet />, tone: "brand" },
+  { value: "bolus", label: "STAT BOLUS", icon: <FaBolt />, tone: "red" },
 ];
 
 const VIEWS = [
