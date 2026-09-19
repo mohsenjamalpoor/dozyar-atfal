@@ -23,15 +23,22 @@ export default function InfusionCard({ drug, weight, factor, volume }) {
         {/* PREPARE */}
         <section className="rounded-xl border border-slate-200 bg-slate-100/70 p-3">
           <p className="text-xs font-bold text-slate-500">آماده‌سازی</p>
-          <p dir="ltr" className="mt-1 text-left text-[15px] italic leading-6 text-slate-600">
-            Add (Wt × {inf.mgPerKg.toFixed(2)} × {factor.toFixed(2)}) mg to {c.volume.toFixed(2)} mL total.
+          <p
+            dir="ltr"
+            className="mt-1 text-left text-[15px] italic leading-6 text-slate-600"
+          >
+            Add (Wt × {inf.mgPerKg.toFixed(2)} × {factor.toFixed(2)}) mg to{" "}
+            {c.volume.toFixed(2)} mL total.
             <br />
             Stock: {inf.stockLabel}.
           </p>
 
           {c.totalMg !== null && (
             <div className="mt-2 rounded-lg bg-white p-2.5 ring-1 ring-brand-100">
-              <p dir="ltr" className="text-left text-sm font-bold text-brand-800">
+              <p
+                dir="ltr"
+                className="text-left text-sm font-bold text-brand-800"
+              >
                 {num(c.totalMg)} mg = {num(c.stockMl)} mL stock
               </p>
               {c.diluentMl >= 0 ? (
@@ -40,7 +47,8 @@ export default function InfusionCard({ drug, weight, factor, volume }) {
                 </p>
               ) : (
                 <p className="text-sm font-medium text-red-700">
-                  حجم استوک از حجم کل بیشتر است؛ «حجم کل» را افزایش دهید یا غلظت را کم کنید.
+                  حجم استوک از حجم کل بیشتر است؛ «حجم کل» را افزایش دهید یا غلظت
+                  را کم کنید.
                 </p>
               )}
             </div>
@@ -50,7 +58,10 @@ export default function InfusionCard({ drug, weight, factor, volume }) {
         {/* TITRATE */}
         <section className="rounded-xl border border-amber-300 bg-amber-50 p-3">
           <p className="text-xs font-bold text-slate-500">تیتراسیون</p>
-          <p dir="ltr" className="mt-1 text-left text-lg font-bold text-orange-700">
+          <p
+            dir="ltr"
+            className="mt-1 text-left text-lg font-bold text-orange-700"
+          >
             1 mL/hr = {num(c.perMlHr)} µg/kg/min
           </p>
 

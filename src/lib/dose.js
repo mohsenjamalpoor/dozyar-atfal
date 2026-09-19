@@ -55,7 +55,10 @@ export function calcInfusion(inf, weight, cf = 1, totalVolume) {
   const base = {
     volume,
     perMlHr,
-    rates: (inf.rates || [0.5, 1, 2, 4]).map((rate) => ({ rate, dose: rate * perMlHr })),
+    rates: (inf.rates || [0.5, 1, 2, 4]).map((rate) => ({
+      rate,
+      dose: rate * perMlHr,
+    })),
     rateMin: inf.range[0] / perMlHr,
     rateMax: inf.range[1] / perMlHr,
     totalMg: null,

@@ -2,7 +2,14 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { FaBolt, FaDroplet, FaBrain, FaTableList, FaBookMedical, FaXmark } from "react-icons/fa6";
+import {
+  FaBolt,
+  FaDroplet,
+  FaBrain,
+  FaTableList,
+  FaBookMedical,
+  FaXmark,
+} from "react-icons/fa6";
 import { EMERGENCY_DRUGS } from "@/lib/data/emergency";
 import { parseWeight } from "@/lib/dose";
 import { useWeight } from "@/lib/useWeight";
@@ -43,7 +50,9 @@ export default function EmergencyTemplate() {
   const [volume, setVolume] = useState(0); // 0 = Default
 
   const weight = parseWeight(weightStr);
-  const list = EMERGENCY_DRUGS.filter((d) => d[mode] && (!focused || d.id === focused.id));
+  const list = EMERGENCY_DRUGS.filter(
+    (d) => d[mode] && (!focused || d.id === focused.id),
+  );
 
   return (
     <main>
@@ -62,11 +71,21 @@ export default function EmergencyTemplate() {
       />
 
       <div className="space-y-4 border-b border-slate-200 bg-white px-4 pb-4 pt-4">
-        <SegmentedTabs options={MODES} value={mode} onChange={setMode} size="lg" />
+        <SegmentedTabs
+          options={MODES}
+          value={mode}
+          onChange={setMode}
+          size="lg"
+        />
         <WeightInput value={weightStr} onChange={setWeight} />
         <SegmentedTabs options={VIEWS} value={view} onChange={setView} />
         {mode === "infusion" && (
-          <InfusionControls factor={factor} onFactor={setFactor} volume={volume} onVolume={setVolume} />
+          <InfusionControls
+            factor={factor}
+            onFactor={setFactor}
+            volume={volume}
+            onVolume={setVolume}
+          />
         )}
       </div>
 
@@ -98,10 +117,21 @@ export default function EmergencyTemplate() {
         {mode === "infusion" &&
           (view === "smart" ? (
             list.map((d) => (
-              <InfusionCard key={d.id} drug={d} weight={weight} factor={factor} volume={volume} />
+              <InfusionCard
+                key={d.id}
+                drug={d}
+                weight={weight}
+                factor={factor}
+                volume={volume}
+              />
             ))
           ) : list.length > 0 ? (
-            <InfusionTable drugs={list} weight={weight} factor={factor} volume={volume} />
+            <InfusionTable
+              drugs={list}
+              weight={weight}
+              factor={factor}
+              volume={volume}
+            />
           ) : null)}
       </div>
 

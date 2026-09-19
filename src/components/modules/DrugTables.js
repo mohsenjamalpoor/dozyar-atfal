@@ -1,6 +1,7 @@
 import { calcBolus, calcInfusion, num, range } from "@/lib/dose";
 
-const th = "whitespace-nowrap bg-brand-700 px-3 py-2.5 text-start text-xs font-bold text-white";
+const th =
+  "whitespace-nowrap bg-brand-700 px-3 py-2.5 text-start text-xs font-bold text-white";
 const td = "whitespace-nowrap px-3 py-2.5 text-sm";
 
 export function BolusTable({ drugs, weight }) {
@@ -25,13 +26,21 @@ export function BolusTable({ drugs, weight }) {
                 <td dir="ltr" className={`${td} text-left text-slate-600`}>
                   {num(d.bolus.dosePerKg)} {d.bolus.doseUnit}
                 </td>
-                <td dir="ltr" className={`${td} text-left font-bold text-red-700`}>
+                <td
+                  dir="ltr"
+                  className={`${td} text-left font-bold text-red-700`}
+                >
                   {c ? `${num(c.dose)} ${d.bolus.doseUnit}` : "—"}
                 </td>
-                <td dir="ltr" className={`${td} text-left font-bold text-brand-700`}>
+                <td
+                  dir="ltr"
+                  className={`${td} text-left font-bold text-brand-700`}
+                >
                   {c ? num(c.volume) : "—"}
                 </td>
-                <td dir="ltr" className={`${td} text-left text-slate-600`}>{d.bolus.route}</td>
+                <td dir="ltr" className={`${td} text-left text-slate-600`}>
+                  {d.bolus.route}
+                </td>
               </tr>
             );
           })}
@@ -64,13 +73,21 @@ export function InfusionTable({ drugs, weight, factor, volume }) {
                 <td dir="ltr" className={`${td} text-left text-slate-600`}>
                   {range(d.infusion.range[0], d.infusion.range[1])}
                 </td>
-                <td dir="ltr" className={`${td} text-left font-bold text-brand-700`}>
-                  {c.totalMg !== null ? `${num(c.totalMg)} mg / ${num(c.volume)} mL` : `Wt × ${num(d.infusion.mgPerKg * factor)} mg`}
+                <td
+                  dir="ltr"
+                  className={`${td} text-left font-bold text-brand-700`}
+                >
+                  {c.totalMg !== null
+                    ? `${num(c.totalMg)} mg / ${num(c.volume)} mL`
+                    : `Wt × ${num(d.infusion.mgPerKg * factor)} mg`}
                 </td>
                 <td dir="ltr" className={`${td} text-left text-slate-700`}>
                   {c.stockMl !== null ? num(c.stockMl) : "—"}
                 </td>
-                <td dir="ltr" className={`${td} text-left font-bold text-orange-700`}>
+                <td
+                  dir="ltr"
+                  className={`${td} text-left font-bold text-orange-700`}
+                >
                   {num(c.perMlHr)} µg/kg/min
                 </td>
                 <td dir="ltr" className={`${td} text-left text-slate-700`}>

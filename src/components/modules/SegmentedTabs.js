@@ -21,7 +21,12 @@ const SIZES = {
 };
 
 /** options: [{ value, label, icon?, tone? }] */
-export default function SegmentedTabs({ options, value, onChange, size = "md" }) {
+export default function SegmentedTabs({
+  options,
+  value,
+  onChange,
+  size = "md",
+}) {
   return (
     <div className="grid grid-cols-2 gap-3" role="tablist">
       {options.map((o) => {
