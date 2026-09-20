@@ -19,7 +19,11 @@ export const DRUGS = [
     fa: "استامینوفن",
     alias: ["Paracetamol", "پاراستامول", "تب بر"],
     category: "مسکن و تب‌بر",
-    sideEffects: ["آسیب کبدی در مصرف بیش از حد مجاز", "حساسیت پوستی (نادر)", "تهوع"],
+    sideEffects: [
+      "آسیب کبدی در مصرف بیش از حد مجاز",
+      "حساسیت پوستی (نادر)",
+      "تهوع",
+    ],
     forms: [
       {
         type: "syrup",
@@ -32,6 +36,32 @@ export const DRUGS = [
         maxDose: 1000,
         route: "خوراکی",
         admin: "با سرنگ یا قاشق مدرج مصرف شود؛ قبل از مصرف تکان داده شود.",
+      },
+      {
+        type: "ampoule",
+        strength: "300 mg / 2 mL",
+        mgPerUnit: 150,
+        unitLabel: "mL",
+        dosePerKg: [10, 15],
+        freq: "هر ۶ ساعت",
+        maxDaily: "75 mg/kg/day (حداکثر 4 g)",
+        maxDose: 1000,
+        route: "IV",
+        admin:
+          "قبل از تزریق رقیق شود (مثلاً در 50 تا 100 mL نرمال سالین) و طی ۱۵ دقیقه انفوزیون شود. مراقب اشتباه 10 برابری mL و mg باشید.",
+      },
+      {
+        type: "tablet",
+        strength: "500 mg",
+        mgPerUnit: 500,
+        unitLabel: "قرص",
+        dosePerKg: [10, 15],
+        freq: "هر ۴ تا ۶ ساعت",
+        maxDaily: "75 mg/kg/day (حداکثر 4 g)",
+        maxDose: 1000,
+        route: "خوراکی",
+        admin:
+          "برای کودکانی که می‌توانند قرص ببلعند. برای وزن پایین، دقت تقسیم قرص کم است؛ شربت ترجیح داده شود.",
       },
       {
         type: "suppository",
@@ -137,7 +167,12 @@ export const DRUGS = [
     fa: "سفترياکسون",
     alias: ["سفتریاکسون", "Rocephin"],
     category: "آنتی‌بیوتیک تزریقی",
-    sideEffects: ["درد محل تزریق", "اسهال", "رسوب صفراوی", "تداخل با کلسیم IV در نوزادان"],
+    sideEffects: [
+      "درد محل تزریق",
+      "اسهال",
+      "رسوب صفراوی",
+      "تداخل با کلسیم IV در نوزادان",
+    ],
     forms: [
       {
         type: "vial",
@@ -161,7 +196,12 @@ export const DRUGS = [
     fa: "فوروزماید",
     alias: ["Lasix", "لازیکس"],
     category: "دیورتیک",
-    sideEffects: ["هیپوکالمی", "هیپوناترمی", "کم‌آبی", "کم‌شنوایی (تزریق سریع)"],
+    sideEffects: [
+      "هیپوکالمی",
+      "هیپوناترمی",
+      "کم‌آبی",
+      "کم‌شنوایی (تزریق سریع)",
+    ],
     forms: [
       {
         type: "ampoule",
@@ -195,7 +235,12 @@ export const DRUGS = [
     fa: "ایبوپروفن",
     alias: ["Brufen", "بروفن"],
     category: "مسکن و ضدالتهاب",
-    sideEffects: ["درد معده", "تهوع", "خونریزی گوارشی (نادر)", "اختلال کلیوی در کم‌آبی"],
+    sideEffects: [
+      "درد معده",
+      "تهوع",
+      "خونریزی گوارشی (نادر)",
+      "اختلال کلیوی در کم‌آبی",
+    ],
     forms: [
       {
         type: "syrup",
@@ -232,6 +277,19 @@ export const DRUGS = [
     sideEffects: ["سردرد", "یبوست", "طولانی شدن QT (نادر)"],
     forms: [
       {
+        type: "tablet",
+        strength: "4 mg",
+        mgPerUnit: 4,
+        unitLabel: "قرص",
+        dosePerKg: [0.15, 0.15],
+        freq: "هر ۸ ساعت",
+        maxDaily: "24 mg/day",
+        maxDose: 8,
+        route: "خوراکی",
+        admin:
+          "۳۰ دقیقه قبل از غذا/شیمی‌درمانی. برای وزن پایین، دقت تقسیم قرص کم است؛ شربت ترجیح داده شود.",
+      },
+      {
         type: "syrup",
         strength: "4 mg / 5 mL",
         mgPerUnit: 0.8,
@@ -263,7 +321,12 @@ export const DRUGS = [
     fa: "پردنیزولون",
     alias: ["Prednisone", "پردنیزون"],
     category: "کورتیکواستروئید",
-    sideEffects: ["افزایش اشتها", "بی‌خوابی", "افزایش قند خون", "سرکوب ایمنی در مصرف طولانی"],
+    sideEffects: [
+      "افزایش اشتها",
+      "بی‌خوابی",
+      "افزایش قند خون",
+      "سرکوب ایمنی در مصرف طولانی",
+    ],
     forms: [
       {
         type: "tablet",
