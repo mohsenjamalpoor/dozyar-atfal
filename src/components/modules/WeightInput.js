@@ -9,7 +9,7 @@ export default function WeightInput({ value, onChange }) {
   return (
     <div>
       <div dir="ltr" className="relative">
-        <FaWeightScale className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-brand-500" />
+        <FaWeightScale className="pointer-events-none absolute inset-s-4 top-1/2 -translate-y-1/2 text-brand-500" />
         <input
           dir="ltr"
           inputMode="decimal"
