@@ -2,14 +2,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import {
-  FaBolt,
-  FaDroplet,
-  FaBrain,
-  FaTableList,
-  FaBookMedical,
-  FaXmark,
-} from "react-icons/fa6";
+import { FaBolt, FaDroplet, FaBrain, FaTableList, FaBookMedical, FaXmark } from "react-icons/fa6";
 import { EMERGENCY_DRUGS } from "@/lib/data/emergency";
 import { parseWeight } from "@/lib/dose";
 import { useWeight } from "@/lib/useWeight";
@@ -20,16 +13,18 @@ import InfusionControls from "@/components/modules/InfusionControls";
 import BolusCard from "@/components/modules/BolusCard";
 import InfusionCard from "@/components/modules/InfusionCard";
 import { BolusTable, InfusionTable } from "@/components/modules/DrugTables";
-import Disclaimer from "@/components/modules/Disclaimer";
+import EmergencyFooter from "@/components/modules/EmergencyFooter";
+
+const GUIDE_HREF = "/drugs";
 
 const MODES = [
-  { value: "infusion", label: "INFUSION", icon: <FaDroplet />, tone: "brand" },
   { value: "bolus", label: "STAT BOLUS", icon: <FaBolt />, tone: "red" },
+  { value: "infusion", label: "INFUSION", icon: <FaDroplet />, tone: "brand" },
 ];
 
 const VIEWS = [
-  { value: "smart", label: "Smart View", icon: <FaBrain />, tone: "brand" },
-  { value: "table", label: "Table View", icon: <FaTableList />, tone: "blue" },
+  { value: "smart", label: "Smart View", icon: <FaBrain />, tone: "brand", offTone: "blue" },
+  { value: "table", label: "Table View", icon: <FaTableList />, tone: "brand", offTone: "blue" },
 ];
 
 export default function EmergencyTemplate() {
@@ -50,19 +45,18 @@ export default function EmergencyTemplate() {
   const [volume, setVolume] = useState(0); // 0 = Default
 
   const weight = parseWeight(weightStr);
-  const list = EMERGENCY_DRUGS.filter(
-    (d) => d[mode] && (!focused || d.id === focused.id),
-  );
+  const list = EMERGENCY_DRUGS.filter((d) => d[mode] && (!focused || d.id === focused.id));
+  if (mode === "infusion") list.sort((a, b) => a.infusion.order - b.infusion.order);
 
   return (
-    <main>
+    <main className="min-h-dvh bg-blue-50/60">
       <PageHeader
-        title="داروهای اورژانسی"
-        subtitle="بر اساس وزن · Bolus + Infusion"
+        title="Emergency PICU Drugs"
+        subtitle="Weight-based · Bolus + Infusion calculator"
         right={
           <Link
-            href="/drugs"
-            aria-label="داروهای کاربردی"
+            href={GUIDE_HREF}
+            aria-label="Reference guide"
             className="grid size-10 place-items-center rounded-full text-xl transition hover:bg-white/10"
           >
             <FaBookMedical />
@@ -70,33 +64,28 @@ export default function EmergencyTemplate() {
         }
       />
 
+      {/* انتخاب حالت + وزن + نوع نمایش (ثابت نیست؛ همراه صفحه اسکرول می‌شود) */}
       <div className="space-y-4 border-b border-slate-200 bg-white px-4 pb-4 pt-4">
-        <SegmentedTabs
-          options={MODES}
-          value={mode}
-          onChange={setMode}
-          size="lg"
-        />
+        <SegmentedTabs options={MODES} value={mode} onChange={setMode} size="lg" />
         <WeightInput value={weightStr} onChange={setWeight} />
         <SegmentedTabs options={VIEWS} value={view} onChange={setView} />
-        {mode === "infusion" && (
-          <InfusionControls
-            factor={factor}
-            onFactor={setFactor}
-            volume={volume}
-            onVolume={setVolume}
-          />
-        )}
       </div>
 
-      <div className="space-y-4 bg-brand-50/60 px-4 py-4">
+      {mode === "infusion" && (
+        <div className="border-b border-slate-200 bg-white px-4 py-3">
+          <InfusionControls factor={factor} onFactor={setFactor} volume={volume} onVolume={setVolume} />
+        </div>
+      )}
+
+      <div className="space-y-4 px-4 py-4">
         {focused && (
           <button
             type="button"
             onClick={() => router.replace("/emergency")}
+            dir="ltr"
             className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-700 ring-1 ring-brand-200"
           >
-            فقط {focused.name}
+            Only {focused.name}
             <FaXmark />
           </button>
         )}
@@ -117,25 +106,14 @@ export default function EmergencyTemplate() {
         {mode === "infusion" &&
           (view === "smart" ? (
             list.map((d) => (
-              <InfusionCard
-                key={d.id}
-                drug={d}
-                weight={weight}
-                factor={factor}
-                volume={volume}
-              />
+              <InfusionCard key={d.id} drug={d} weight={weight} factor={factor} volume={volume} />
             ))
           ) : list.length > 0 ? (
-            <InfusionTable
-              drugs={list}
-              weight={weight}
-              factor={factor}
-              volume={volume}
-            />
+            <InfusionTable drugs={list} weight={weight} factor={factor} volume={volume} />
           ) : null)}
       </div>
 
-      <Disclaimer />
+      <EmergencyFooter guideHref={GUIDE_HREF} />
     </main>
   );
 }

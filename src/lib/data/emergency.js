@@ -1,63 +1,75 @@
 /**
- * داروهای اورژانسی — دیتای نمونه (mock)
- * ⚠️ همهٔ مقادیر را با پروتکل مرجع خودتان تأیید/جایگزین کنید.
+ * داروهای اورژانسی — بر اساس اسکرین‌شات‌های اپ مرجع
+ * ⚠️ غلظت استوک (stockConc) در اسکرین‌شات‌ها دیده نمی‌شد؛ مقادیر استاندارد گذاشته شده،
+ *    قبل از استفاده با ویال/آمپول واقعی بخش خودتان تطبیق دهید.
  *
- * bolus    : { dosePerKg, doseUnit, stockConc (واحد دوز بر mL), stockLabel, route, minDose?, maxDose?, note }
- * infusion : { range:[min,max] µg/kg/min, mgPerKg (ضریب آماده‌سازی), defaultVolume (mL),
- *              stockConc (mg/mL), stockLabel, rates:[mL/hr ...] }
+ * bolus:
+ *   indications : متن ایتالیک زیر نام دارو
+ *   doses[]     : هر باکس دوز → { label, dosePerKg, doseUnit, stockConc, stockLabel, minDose?, maxDose? }
+ *                 (minDose / maxDose به همان doseUnit محاسبه می‌شوند)
+ *   maxLabel    : متن ردیف Max
+ *   notes       : متن ردیف Notes
+ *   warning     : باکس هشدار قرمز (اختیاری)
+ *
+ * infusion:
+ *   order         : ترتیب نمایش در تب INFUSION
+ *   title?        : نام نمایشی مخصوص انفوزیون (اگر با name فرق دارد)
+ *   range         : [min, max] عددی برای محاسبه؛ rangeLabel: متن بج (مثلاً "0.05–1.0")
+ *   doseUnit      : 'µg/kg/min' | 'mIU/kg/min'
+ *   prepUnit      : 'mg' | 'U' — واحد در فرمول Add (Wt × amountPerKg × غلظت) ... to X mL
+ *   amountPerKg   : ضریب آماده‌سازی؛ 1 mL/hr = amountPerKg × 1000 / (حجم کل × 60)
+ *   defaultVolume : حجم کل پیش‌فرض (mL)
+ *   stockConc     : غلظت استوک به‌ازای prepUnit در هر mL؛ stockLabel: متن نمایشی
+ *   warning?      : باکس هشدار قرمز؛ rates?: نرخ‌های چیپ تیتراسیون (پیش‌فرض 0.5/1/2/4 mL/hr)
  */
 export const EMERGENCY_DRUGS = [
   {
-    id: "epinephrine",
-    name: "Epinephrine",
-    fa: "اپی‌نفرین",
-    alias: ["Adrenaline", "آدرنالین"],
+    id: "adrenaline",
+    name: "Adrenaline",
+    fa: "آدرنالین (اپی‌نفرین)",
+    alias: ["Epinephrine", "اپی نفرین", "اپینفرین"],
     bolus: {
-      dosePerKg: 0.01,
-      doseUnit: "mg",
-      maxDose: 1,
-      stockConc: 0.1,
-      stockLabel: "0.1 mg/mL (1:10,000)",
-      route: "IV / IO",
-      note: "ایست قلبی؛ تکرار هر ۳ تا ۵ دقیقه.",
+      indications: ["Cardiac arrest", "Symptomatic bradycardia", "Anaphylaxis"],
+      doses: [
+        {
+          label: "Cardiac arrest IV/IO (1:10,000)",
+          dosePerKg: 0.01,
+          doseUnit: "mg",
+          stockConc: 0.1,
+          stockLabel: "0.1 mg/mL (1:10,000)",
+          maxDose: 1,
+        },
+        {
+          label: "Symptomatic bradycardia ETT (1:1,000)",
+          dosePerKg: 0.1,
+          doseUnit: "mg",
+          stockConc: 1,
+          stockLabel: "1 mg/mL (1:1,000)",
+          maxDose: 2.5,
+        },
+        {
+          label: "Anaphylaxis IM (1:1,000)",
+          dosePerKg: 0.01,
+          doseUnit: "mg",
+          stockConc: 1,
+          stockLabel: "1 mg/mL (1:1,000)",
+          maxDose: 0.5,
+        },
+      ],
+      maxLabel: "1 mg  / 2.5 mg / 0.5 mg",
+      notes: "IM in anaphylaxis. Repeat q 3–5 min in arrest.",
     },
     infusion: {
+      order: 3,
+      title: "Epinephrine (Adrenaline)",
       range: [0.05, 1],
-      mgPerKg: 0.6,
-      defaultVolume: 100,
+      rangeLabel: "0.05–1.0",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 0.3,
+      defaultVolume: 50,
       stockConc: 1,
-      stockLabel: "1 mg/mL ampoule",
-      rates: [1, 2, 5, 10],
-    },
-  },
-  {
-    id: "adenosine",
-    name: "Adenosine",
-    fa: "آدنوزین",
-    alias: [],
-    bolus: {
-      dosePerKg: 0.1,
-      doseUnit: "mg",
-      maxDose: 6,
-      stockConc: 3,
-      stockLabel: "3 mg/mL",
-      route: "IV سریع (Rapid push)",
-      note: "دوز دوم 0.2 mg/kg (حداکثر 12 mg). با فلاش سالین.",
-    },
-  },
-  {
-    id: "amiodarone",
-    name: "Amiodarone",
-    fa: "آمیودارون",
-    alias: [],
-    bolus: {
-      dosePerKg: 5,
-      doseUnit: "mg",
-      maxDose: 300,
-      stockConc: 50,
-      stockLabel: "50 mg/mL",
-      route: "IV / IO",
-      note: "در ایست قلبی VF/pVT؛ در حالت با نبض آهسته‌تر تزریق شود.",
+      stockLabel: "1 mg/mL (1:1,000)",
     },
   },
   {
@@ -66,87 +78,182 @@ export const EMERGENCY_DRUGS = [
     fa: "آتروپین",
     alias: [],
     bolus: {
-      dosePerKg: 0.02,
-      doseUnit: "mg",
-      minDose: 0.1,
-      maxDose: 0.5,
-      stockConc: 0.5,
-      stockLabel: "0.5 mg/mL",
-      route: "IV / IO",
-      note: "برادی‌کاردی مقاوم؛ دوز کمتر از 0.1 mg توصیه نمی‌شود.",
+      indications: ["Bradycardia", "AV Block"],
+      doses: [
+        {
+          label: "IV / IO / IM",
+          dosePerKg: 0.02,
+          doseUnit: "mg",
+          stockConc: 0.5,
+          stockLabel: "0.5 mg/mL",
+          minDose: 0.1,
+          maxDose: 1,
+        },
+        {
+          label: "ETT",
+          dosePerKg: 0.05,
+          doseUnit: "mg",
+          stockConc: 0.5,
+          stockLabel: "0.5 mg/mL",
+          minDose: 0.1,
+          maxDose: 1,
+        },
+      ],
+      maxLabel: "1 mg",
+      notes: "Min single dose 0.1 mg to avoid paradoxical bradycardia.",
+    },
+  },
+  {
+    id: "adenosine",
+    name: "Adenosine",
+    fa: "آدنوزین",
+    alias: [],
+    bolus: {
+      indications: ["Supraventricular tachycardia"],
+      doses: [
+        {
+          label: "1st dose IV/IO",
+          dosePerKg: 0.1,
+          doseUnit: "mg",
+          stockConc: 3,
+          stockLabel: "3 mg/mL",
+          maxDose: 6,
+        },
+        {
+          label: "2nd dose IV/IO",
+          dosePerKg: 0.2,
+          doseUnit: "mg",
+          stockConc: 3,
+          stockLabel: "3 mg/mL",
+          maxDose: 12,
+        },
+      ],
+      maxLabel: "6 mg / 12 mg",
+      notes: "Rapid bolus, immediately follow with 10 mL NS flush.",
+      warning: "Half-life ~10 sec — give as fast push into a large vein.",
+    },
+  },
+  {
+    id: "amiodarone",
+    name: "Amiodarone",
+    fa: "آمیودارون",
+    alias: [],
+    bolus: {
+      indications: ["Ventricular tachycardia", "Ventricular fibrillation"],
+      doses: [
+        {
+          label: "IV / IO",
+          dosePerKg: 5,
+          doseUnit: "mg",
+          stockConc: 50,
+          stockLabel: "50 mg/mL",
+          maxDose: 300,
+        },
+      ],
+      maxLabel: "First dose 300 mg ; Subsequent 150 mg",
+      notes: "Infuse over 20–60 minutes (over 1–2 min in pulseless arrest).",
     },
   },
   {
     id: "calcium-gluconate",
-    name: "Calcium Gluconate 10%",
+    name: "Calcium gluconate (10 %)",
     fa: "کلسیم گلوکونات ۱۰٪",
-    alias: ["Calcium"],
+    alias: ["Calcium", "کلسیم"],
     bolus: {
-      dosePerKg: 50,
-      doseUnit: "mg",
-      maxDose: 2000,
-      stockConc: 100,
-      stockLabel: "100 mg/mL (10%)",
-      route: "IV / IO آهسته",
-      note: "محدودهٔ 50 تا 100 mg/kg؛ با مانیتور ECG و در ۵ تا ۱۰ دقیقه.",
+      indications: ["Hypocalcaemia", "Hyperkalaemia"],
+      doses: [
+        {
+          label: "IV slow push",
+          dosePerKg: 1,
+          doseUnit: "mL",
+          stockConc: 1,
+          stockLabel: "10 % = 100 mg/mL",
+          maxDose: 20, // 2 g
+        },
+      ],
+      maxLabel: "2 g per dose",
+      notes: "Over 10–20 min via confirmed IV — extravasation causes necrosis.",
+      warning: "Do NOT mix with NaHCO₃ (precipitates). Monitor HR.",
     },
   },
   {
-    id: "dextrose-10",
-    name: "Dextrose 10%",
-    fa: "دکستروز ۱۰٪",
-    alias: ["D10W", "Glucose"],
+    id: "dextrose",
+    name: "Dextrose",
+    fa: "دکستروز",
+    alias: ["Glucose", "D10W", "D50", "گلوکز"],
     bolus: {
-      dosePerKg: 2,
-      doseUnit: "mL",
-      stockConc: 1,
-      stockLabel: "D10W",
-      route: "IV / IO",
-      note: "هیپوگلیسمی؛ محدودهٔ 2 تا 5 mL/kg. قند را پس از ۱۵ دقیقه چک کنید.",
+      indications: ["Hypoglycaemia"],
+      doses: [
+        {
+          label: "10 % dextrose IV/IO",
+          dosePerKg: 10,
+          doseUnit: "mL",
+          stockConc: 1,
+          stockLabel: "10 %",
+          maxDose: 500, // 50 g
+        },
+        {
+          label: "25 % dextrose IV/IO",
+          dosePerKg: 4,
+          doseUnit: "mL",
+          stockConc: 1,
+          stockLabel: "25 %",
+          maxDose: 200, // 50 g
+        },
+        {
+          label: "50 % dextrose IV/IO",
+          dosePerKg: 2,
+          doseUnit: "mL",
+          stockConc: 1,
+          stockLabel: "50 %",
+          maxDose: 100, // 50 g
+        },
+      ],
+      maxLabel: "Max single dose 50 g",
+      notes: "Re-check capillary glucose at 15–30 min.",
     },
   },
   {
-    id: "dobutamine",
-    name: "Dobutamine",
-    fa: "دوبوتامین",
-    alias: [],
-    infusion: {
-      range: [5, 20],
-      mgPerKg: 30,
-      defaultVolume: 50,
-      stockConc: 50,
-      stockLabel: "50 mg/mL ampoule",
-      rates: [0.5, 1, 2, 4],
-    },
-  },
-  {
-    id: "dopamine",
-    name: "Dopamine",
-    fa: "دوپامین",
-    alias: [],
-    infusion: {
-      range: [5, 20],
-      mgPerKg: 30,
-      defaultVolume: 50,
-      stockConc: 40,
-      stockLabel: "40 mg/mL ampoule",
-      rates: [0.5, 1, 2, 4],
-    },
-  },
-
-  {
-    id: "midazolam",
-    name: "Midazolam",
-    fa: "میدازولام",
-    alias: ["Dormicum", "دورمیکوم"],
+    id: "insulin",
+    name: "Insulin",
+    fa: "انسولین",
+    alias: ["Regular insulin"],
     bolus: {
-      dosePerKg: 0.1,
-      doseUnit: "mg",
-      maxDose: 5,
-      stockConc: 5,
-      stockLabel: "5 mg/mL",
-      route: "IV / IO / IM",
-      note: "تشنج؛ آمادگی حمایت تنفسی داشته باشید.",
+      indications: ["Hyperkalaemia"],
+      doses: [
+        {
+          label: "Regular insulin IV/IO",
+          dosePerKg: 0.1,
+          doseUnit: "U",
+          stockConc: 1,
+          stockLabel: "1 U/mL (diluted)",
+          maxDose: 10,
+        },
+      ],
+      maxLabel: "10 Units",
+      notes:
+        "Always co-administer with 0.5 g/kg dextrose. Monitor blood glucose hourly.",
+    },
+  },
+  {
+    id: "magnesium-sulphate",
+    name: "Magnesium sulphate",
+    fa: "سولفات منیزیم",
+    alias: ["MgSO4", "منیزیم"],
+    bolus: {
+      indications: ["Torsades de pointes", "Hypomagnesaemia"],
+      doses: [
+        {
+          label: "IV / IO",
+          dosePerKg: 50,
+          doseUnit: "mg",
+          stockConc: 500,
+          stockLabel: "50 % = 500 mg/mL",
+          maxDose: 2000,
+        },
+      ],
+      maxLabel: "2 g per dose",
+      notes: "Over 20–30 min. Stop if hypotension or bradycardia.",
     },
   },
   {
@@ -155,13 +262,86 @@ export const EMERGENCY_DRUGS = [
     fa: "نالوکسان",
     alias: ["Narcan"],
     bolus: {
-      dosePerKg: 0.1,
-      doseUnit: "mg",
-      maxDose: 2,
-      stockConc: 0.4,
-      stockLabel: "0.4 mg/mL",
-      route: "IV / IO / IM",
-      note: "مسمومیت اپیوئیدی؛ تکرار هر ۲ تا ۳ دقیقه در صورت نیاز.",
+      indications: ["Opioid overdose", "Respiratory depression"],
+      doses: [
+        {
+          label: "Resp depression (low dose)",
+          dosePerKg: 0.003,
+          doseUnit: "mg",
+          stockConc: 0.4,
+          stockLabel: "0.4 mg/mL",
+          maxDose: 0.1,
+        },
+        {
+          label: "Full reversal IV/IO/IM/SC",
+          dosePerKg: 0.1,
+          doseUnit: "mg",
+          stockConc: 0.4,
+          stockLabel: "0.4 mg/mL",
+          maxDose: 2,
+        },
+      ],
+      maxLabel: "0.1 mg / 2 mg",
+      notes: "ETT dose 2–3x IV dose. Watch for re-narcotisation.",
+    },
+  },
+  {
+    id: "sodium-bicarbonate",
+    name: "Sodium Bicarbonate",
+    fa: "بی‌کربنات سدیم",
+    alias: ["NaHCO3", "بیکربنات"],
+    bolus: {
+      indications: ["Metabolic acidosis", "Hyperkalaemia", "TCA overdose"],
+      doses: [
+        {
+          label: "IV / IO (8.4 %)",
+          dosePerKg: 1,
+          doseUnit: "mEq",
+          stockConc: 1,
+          stockLabel: "8.4 % = 1 mEq/mL",
+          maxDose: 50,
+        },
+      ],
+      maxLabel: "50 mEq per dose",
+      notes: "Dilute 1:1 with sterile water for peripheral access.",
+      warning:
+        "Establish ventilation first. Do NOT mix with adrenaline or calcium.",
+    },
+  },
+
+  /* ---------- فقط انفوزیون ---------- */
+  {
+    id: "dopamine",
+    name: "Dopamine",
+    fa: "دوپامین",
+    alias: [],
+    infusion: {
+      order: 1,
+      range: [5, 20],
+      rangeLabel: "5–20",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 30,
+      defaultVolume: 50,
+      stockConc: 40,
+      stockLabel: "40 mg/mL ampoule",
+    },
+  },
+  {
+    id: "dobutamine",
+    name: "Dobutamine",
+    fa: "دوبوتامین",
+    alias: [],
+    infusion: {
+      order: 2,
+      range: [5, 20],
+      rangeLabel: "5–20",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 30,
+      defaultVolume: 50,
+      stockConc: 50,
+      stockLabel: "50 mg/mL ampoule",
     },
   },
   {
@@ -170,41 +350,104 @@ export const EMERGENCY_DRUGS = [
     fa: "نوراپی‌نفرین",
     alias: ["Noradrenaline", "نورآدرنالین", "Levophed"],
     infusion: {
-      range: [0.05, 2],
-      mgPerKg: 0.6,
-      defaultVolume: 100,
+      order: 4,
+      range: [0.05, 0.5],
+      rangeLabel: "0.05–0.5",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 0.3,
+      defaultVolume: 50,
+      stockConc: 2,
+      stockLabel: "2 mg/mL ampoule",
+    },
+  },
+  {
+    id: "vasopressin",
+    name: "Vasopressin",
+    fa: "وازوپرسین",
+    alias: ["ADH", "Pitressin"],
+    infusion: {
+      order: 5,
+      range: [0.5, 2],
+      rangeLabel: "0.5–2",
+      doseUnit: "mIU/kg/min",
+      // ⚠️ در اپ مرجع در متن PREPARE واحد "mIU" نوشته شده، ولی ریاضی 1 mL/hr = 1 mIU/kg/min
+      //    فقط با «واحد (U)» درست درمی‌آید (3 U/kg در 50 mL). اینجا U گذاشته شده.
+      prepUnit: "U",
+      amountPerKg: 3,
+      defaultVolume: 50,
+      stockConc: 20,
+      stockLabel: "20 U/mL ampoule (= 20,000 mIU/mL)",
+    },
+  },
+  {
+    id: "milrinone",
+    name: "Milrinone",
+    fa: "میلرینون",
+    alias: [],
+    infusion: {
+      order: 6,
+      range: [0.25, 1],
+      rangeLabel: "0.25–1.0",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 1.5,
+      defaultVolume: 50,
       stockConc: 1,
       stockLabel: "1 mg/mL ampoule",
-      rates: [1, 2, 5, 10],
     },
   },
   {
-    id: "normal-saline",
-    name: "Normal Saline 0.9%",
-    fa: "نرمال سالین",
-    alias: ["NS", "Fluid bolus", "سرم"],
-    bolus: {
-      dosePerKg: 20,
-      doseUnit: "mL",
-      stockConc: 1,
-      stockLabel: "0.9% NaCl",
-      route: "IV / IO",
-      note: "بولوس مایع؛ در ۵ تا ۲۰ دقیقه و ارزیابی مجدد پس از هر بولوس.",
+    id: "levosimendan",
+    name: "Levosimendan",
+    fa: "لووسیمندان",
+    alias: [],
+    infusion: {
+      order: 7,
+      range: [0.05, 0.2],
+      rangeLabel: "0.05–0.2",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 0.3,
+      defaultVolume: 50,
+      stockConc: 2.5,
+      stockLabel: "2.5 mg/mL ampoule",
     },
   },
   {
-    id: "sodium-bicarbonate",
-    name: "Sodium Bicarbonate 8.4%",
-    fa: "سدیم بی‌کربنات ۸.۴٪",
-    alias: ["NaHCO3", "بیکربنات"],
-    bolus: {
-      dosePerKg: 1,
-      doseUnit: "mEq",
-      maxDose: 50,
-      stockConc: 1,
-      stockLabel: "1 mEq/mL (8.4%)",
-      route: "IV / IO آهسته",
-      note: "در نوزاد و شیرخوار از فرم ۴.۲٪ استفاده شود.",
+    id: "snp",
+    name: "Sodium nitroprusside (SNP)",
+    fa: "نیتروپروساید سدیم",
+    alias: ["SNP", "Nitroprusside", "Nipride", "نیتروپروساید"],
+    infusion: {
+      order: 8,
+      range: [0.5, 10],
+      rangeLabel: "0.5–10",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 3,
+      defaultVolume: 50,
+      stockConc: 25,
+      stockLabel: "50 mg vial / 2 mL → 25 mg/mL",
+      warning:
+        "Protect from light. Watch for cyanide toxicity beyond 48 h or > 2 µg/kg/min.",
+    },
+  },
+  {
+    id: "ntg",
+    name: "Nitroglycerin (NTG)",
+    fa: "نیتروگلیسیرین",
+    alias: ["NTG", "GTN", "Glyceryl trinitrate", "TNT"],
+    infusion: {
+      order: 9,
+      range: [0.5, 20],
+      rangeLabel: "0.5–20",
+      doseUnit: "µg/kg/min",
+      prepUnit: "mg",
+      amountPerKg: 3,
+      defaultVolume: 50,
+      stockConc: 5,
+      stockLabel: "5 mg/mL ampoule",
     },
   },
 ];

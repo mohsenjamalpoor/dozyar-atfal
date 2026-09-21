@@ -1,49 +1,54 @@
-import { calcBolus, calcInfusion, num, range } from "@/lib/dose";
-
-const th =
-  "whitespace-nowrap bg-brand-700 px-3 py-2.5 text-start text-xs font-bold text-white";
-const td = "whitespace-nowrap px-3 py-2.5 text-sm";
+import { calcBolus, calcInfusion, fmtPerKg, num, smartNum } from "@/lib/dose";
 
 export function BolusTable({ drugs, weight }) {
+  const h =
+    "px-3 py-3.5 text-start text-sm font-semibold uppercase tracking-wide text-red-900";
   return (
-    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <table className="w-full min-w-[520px] border-collapse">
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <table dir="ltr" className="w-full table-fixed border-collapse">
+        <colgroup>
+          <col className="w-[34%]" />
+          <col className="w-[33%]" />
+          <col className="w-[33%]" />
+        </colgroup>
         <thead>
-          <tr>
-            <th className={th}>دارو</th>
-            <th className={th}>دوز/kg</th>
-            <th className={th}>دوز</th>
-            <th className={th}>حجم (mL)</th>
-            <th className={th}>راه</th>
+          <tr className="bg-rose-100/60">
+            <th className={h}>Drug · Route</th>
+            <th className={h}>Per-kg dose</th>
+            <th className={h}>Max</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
-          {drugs.map((d) => {
-            const c = calcBolus(d.bolus, weight);
-            return (
-              <tr key={d.id} className="odd:bg-white even:bg-slate-50/70">
-                <td className={`${td} font-bold text-slate-900`}>{d.name}</td>
-                <td dir="ltr" className={`${td} text-left text-slate-600`}>
-                  {num(d.bolus.dosePerKg)} {d.bolus.doseUnit}
-                </td>
-                <td
-                  dir="ltr"
-                  className={`${td} text-left font-bold text-red-700`}
-                >
-                  {c ? `${num(c.dose)} ${d.bolus.doseUnit}` : "—"}
-                </td>
-                <td
-                  dir="ltr"
-                  className={`${td} text-left font-bold text-brand-700`}
-                >
-                  {c ? num(c.volume) : "—"}
-                </td>
-                <td dir="ltr" className={`${td} text-left text-slate-600`}>
-                  {d.bolus.route}
-                </td>
-              </tr>
-            );
-          })}
+        <tbody className="divide-y divide-slate-200">
+          {drugs.flatMap((d) =>
+            d.bolus.doses.map((dose) => {
+              const c = calcBolus(dose, weight);
+              return (
+                <tr key={`${d.id}-${dose.label}`} className="align-top">
+                  <td className="break-words px-3 py-3.5">
+                    <span className="block text-[17px] font-medium leading-snug text-slate-900">
+                      {d.name}
+                    </span>
+                    <span className="mt-0.5 block text-[15px] leading-snug text-slate-500">
+                      {dose.label}
+                    </span>
+                  </td>
+                  <td className="px-3 py-3.5 text-[17px] text-slate-600">
+                    {fmtPerKg(dose.dosePerKg)} {dose.doseUnit}/kg
+                    {c && (
+                      <span className="mt-1 block text-[15px] font-bold text-red-700">
+                        {dose.doseUnit === "mL"
+                          ? `${smartNum(c.volume)} mL`
+                          : `${smartNum(c.dose)} ${dose.doseUnit} → ${smartNum(c.volume)} mL`}
+                      </span>
+                    )}
+                  </td>
+                  <td className="break-words px-3 py-3.5 text-[16px] leading-snug text-slate-500">
+                    {d.bolus.maxLabel}
+                  </td>
+                </tr>
+              );
+            }),
+          )}
         </tbody>
       </table>
     </div>
@@ -51,47 +56,43 @@ export function BolusTable({ drugs, weight }) {
 }
 
 export function InfusionTable({ drugs, weight, factor, volume }) {
+  const h =
+    "bg-brand-50 px-3 py-2 text-start text-xs font-semibold text-slate-500";
   return (
-    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <table className="w-full min-w-[620px] border-collapse">
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <table dir="ltr" className="w-full border-collapse">
         <thead>
           <tr>
-            <th className={th}>دارو</th>
-            <th className={th}>محدوده (µg/kg/min)</th>
-            <th className={th}>مقدار در سرنگ</th>
-            <th className={th}>استوک (mL)</th>
-            <th className={th}>1 mL/hr =</th>
-            <th className={th}>Rate (mL/hr)</th>
+            <th className={h}>Drug</th>
+            <th className={h}>Range</th>
+            <th className={h}>Preparation</th>
+            <th className={h}>1 mL/hr =</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-slate-200">
           {drugs.map((d) => {
-            const c = calcInfusion(d.infusion, weight, factor, volume);
+            const inf = d.infusion;
+            const c = calcInfusion(inf, weight, factor, volume);
             return (
-              <tr key={d.id} className="odd:bg-white even:bg-slate-50/70">
-                <td className={`${td} font-bold text-slate-900`}>{d.name}</td>
-                <td dir="ltr" className={`${td} text-left text-slate-600`}>
-                  {range(d.infusion.range[0], d.infusion.range[1])}
+              <tr key={d.id} className="align-top">
+                <td className="break-words px-3 py-3 text-[15px] font-medium text-slate-900">
+                  {inf.title || d.name}
                 </td>
-                <td
-                  dir="ltr"
-                  className={`${td} text-left font-bold text-brand-700`}
-                >
-                  {c.totalMg !== null
-                    ? `${num(c.totalMg)} mg / ${num(c.volume)} mL`
-                    : `Wt × ${num(d.infusion.mgPerKg * factor)} mg`}
+                <td className="px-3 py-3 text-[15px] text-slate-600">
+                  {inf.rangeLabel} {inf.doseUnit}
                 </td>
-                <td dir="ltr" className={`${td} text-left text-slate-700`}>
-                  {c.stockMl !== null ? num(c.stockMl) : "—"}
+                <td className="px-3 py-3 text-[15px] text-slate-600">
+                  {(inf.amountPerKg * factor).toFixed(2)} {inf.prepUnit}/kg in{" "}
+                  {c.volume.toFixed(2)} mL
+                  {c.totalAmount !== null && (
+                    <span className="mt-1 block text-xs font-semibold text-brand-700">
+                      = {num(c.totalAmount)} {inf.prepUnit} ({num(c.stockMl)} mL
+                      stock)
+                    </span>
+                  )}
                 </td>
-                <td
-                  dir="ltr"
-                  className={`${td} text-left font-bold text-orange-700`}
-                >
-                  {num(c.perMlHr)} µg/kg/min
-                </td>
-                <td dir="ltr" className={`${td} text-left text-slate-700`}>
-                  {range(c.rateMin, c.rateMax)}
+                <td className="px-3 py-3 text-[15px] font-medium text-red-800">
+                  {c.perMlHr.toFixed(2)} {inf.doseUnit}
                 </td>
               </tr>
             );

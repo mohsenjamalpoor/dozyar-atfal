@@ -27,6 +27,18 @@ export function range(a, b, digits = 2) {
   return a === b ? num(a, digits) : `${num(a, digits)}–${num(b, digits)}`;
 }
 
+/** عدد با تعداد رقم اعشار متناسب با بزرگی (برای دوزهای خیلی کوچک) */
+export function smartNum(n) {
+  if (!Number.isFinite(n)) return "—";
+  const a = Math.abs(n);
+  return num(n, a < 0.1 ? 4 : a < 1 ? 3 : 2);
+}
+
+/** نمایش دوز بر kg مثل اپ مرجع: 0.010 / 0.0030 / 10.000 */
+export function fmtPerKg(n) {
+  return n.toFixed(n < 0.01 ? 4 : 3);
+}
+
 export const roundTo = (n, step) => Math.round(n / step) * step;
 
 /** ---------- STAT BOLUS ---------- */
@@ -45,32 +57,32 @@ export function calcBolus(bolus, weight) {
 
 /**
  * ---------- INFUSION ----------
- * mgPerKg  : ضریب آماده‌سازی؛ (وزن × mgPerKg × غلظت) میلی‌گرم در حجم کل
- * perMlHr  : هر 1 mL/hr معادل چند µg/kg/min است (مستقل از وزن)
+ * amountPerKg : ضریب آماده‌سازی؛ (وزن × amountPerKg × غلظت) mg (یا U) در حجم کل
+ * perMlHr     : هر 1 mL/hr معادل چند µg/kg/min (یا mIU/kg/min) است (مستقل از وزن)
  */
 export function calcInfusion(inf, weight, cf = 1, totalVolume) {
   const volume = totalVolume || inf.defaultVolume;
-  const perMlHr = (inf.mgPerKg * cf * 1000) / (volume * 60);
+  const perMlHr = (inf.amountPerKg * cf * 1000) / (volume * 60);
 
   const base = {
     volume,
     perMlHr,
-    rates: (inf.rates || [0.5, 1, 2, 4]).map((rate) => ({
-      rate,
-      dose: rate * perMlHr,
-    })),
+    rates: (inf.rates || [0.5, 1, 2, 4]).map((rate) => ({ rate, dose: rate * perMlHr })),
     rateMin: inf.range[0] / perMlHr,
     rateMax: inf.range[1] / perMlHr,
-    totalMg: null,
+    totalAmount: null,
     stockMl: null,
     diluentMl: null,
   };
   if (!weight) return base;
 
-  const totalMg = weight * inf.mgPerKg * cf;
-  const stockMl = totalMg / inf.stockConc;
-  return { ...base, totalMg, stockMl, diluentMl: volume - stockMl };
+  const totalAmount = weight * inf.amountPerKg * cf;
+  const stockMl = totalAmount / inf.stockConc;
+  return { ...base, totalAmount, stockMl, diluentMl: volume - stockMl };
 }
+
+/** دوز چیپ‌های تیتراسیون مثل اپ مرجع: 0.050 / 0.500 / 1.00 / 40.00 */
+export const fmtDose = (v) => v.toFixed(v < 1 ? 3 : 2);
 
 /** ---------- داروهای کاربردی (شربت/قرص/آمپول ...) ---------- */
 export function calcForm(form, weight) {

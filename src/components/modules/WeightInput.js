@@ -8,14 +8,14 @@ export default function WeightInput({ value, onChange }) {
 
   return (
     <div>
-      <div dir="ltr" className="relative">
+      <div className="relative">
         <FaWeightScale className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-brand-500" />
         <input
           dir="ltr"
           inputMode="decimal"
           value={value}
           onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-          placeholder="وزن بیمار"
+          placeholder="Patient's Weight"
           aria-label="وزن بیمار (کیلوگرم)"
           className="w-full rounded-2xl border-2 border-brand-100 bg-brand-50/70 py-3.5 text-center text-lg font-semibold text-brand-900 outline-none transition placeholder:font-normal placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
         />

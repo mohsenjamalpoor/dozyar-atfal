@@ -6,14 +6,7 @@ const TONES = {
   red: "from-red-600 to-red-800 shadow-red-700/30",
 };
 
-export default function CategoryButton({
-  href,
-  title,
-  subtitle,
-  count,
-  icon: Icon,
-  tone = "brand",
-}) {
+export default function CategoryButton({ href, title, subtitle, count, icon: Icon, tone = "brand" }) {
   return (
     <Link
       href={href}
@@ -27,9 +20,7 @@ export default function CategoryButton({
         <span className="mt-1 block text-sm text-white/80">{subtitle}</span>
       </span>
       <span className="flex flex-col items-center gap-1">
-        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold">
-          {count} دارو
-        </span>
+        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold">{count} دارو</span>
         <FaChevronLeft className="text-white/70 transition group-hover:-translate-x-1" />
       </span>
     </Link>

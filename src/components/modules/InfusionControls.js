@@ -11,11 +11,18 @@ const FACTORS = [
 
 const VOLUMES = [20, 25, 50, 100, 250];
 
-export default function InfusionControls({ factor, onFactor, volume, onVolume }) {
+export default function InfusionControls({
+  factor,
+  onFactor,
+  volume,
+  onVolume,
+}) {
   return (
-    <div className="space-y-3">
+    <div dir="ltr" className="space-y-3">
       <div className="flex items-center gap-3">
-        <span className="shrink-0 text-sm font-semibold text-slate-600">غلظت:</span>
+        <span className="shrink-0 text-sm font-semibold text-slate-600">
+          Concentration:
+        </span>
         <div dir="ltr" className="no-scrollbar flex gap-2 overflow-x-auto py-1">
           {FACTORS.map((f) => {
             const active = f.value === factor;
@@ -40,7 +47,9 @@ export default function InfusionControls({ factor, onFactor, volume, onVolume })
       </div>
 
       <label className="flex items-center gap-3">
-        <span className="shrink-0 text-sm font-semibold text-slate-600">حجم کل:</span>
+        <span className="shrink-0 text-sm font-semibold text-slate-600">
+          Total volume:
+        </span>
         <span className="relative">
           <select
             dir="ltr"
