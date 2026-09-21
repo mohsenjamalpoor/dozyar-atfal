@@ -21,7 +21,12 @@ const SIZES = {
 };
 
 /** options: [{ value, label, icon?, tone? (رنگ حالت فعال), offTone? (رنگ حالت غیرفعال) }] */
-export default function SegmentedTabs({ options, value, onChange, size = "md" }) {
+export default function SegmentedTabs({
+  options,
+  value,
+  onChange,
+  size = "md",
+}) {
   return (
     <div className="grid grid-cols-2 gap-3" role="tablist">
       {options.map((o) => {
@@ -39,8 +44,8 @@ export default function SegmentedTabs({ options, value, onChange, size = "md" })
               active ? on : off
             }`}
           >
-            {o.icon}
             <span>{o.label}</span>
+            {o.icon}
           </button>
         );
       })}

@@ -2,7 +2,14 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { FaBolt, FaDroplet, FaBrain, FaTableList, FaBookMedical, FaXmark } from "react-icons/fa6";
+import {
+  FaBolt,
+  FaDroplet,
+  FaBrain,
+  FaTableList,
+  FaBookMedical,
+  FaXmark,
+} from "react-icons/fa6";
 import { EMERGENCY_DRUGS } from "@/lib/data/emergency";
 import { parseWeight } from "@/lib/dose";
 import { useWeight } from "@/lib/useWeight";
@@ -18,13 +25,25 @@ import EmergencyFooter from "@/components/modules/EmergencyFooter";
 const GUIDE_HREF = "/drugs";
 
 const MODES = [
-  { value: "bolus", label: "STAT BOLUS", icon: <FaBolt />, tone: "red" },
   { value: "infusion", label: "INFUSION", icon: <FaDroplet />, tone: "brand" },
+  { value: "bolus", label: "STAT BOLUS", icon: <FaBolt />, tone: "red" },
 ];
 
 const VIEWS = [
-  { value: "smart", label: "Smart View", icon: <FaBrain />, tone: "brand", offTone: "blue" },
-  { value: "table", label: "Table View", icon: <FaTableList />, tone: "brand", offTone: "blue" },
+  {
+    value: "smart",
+    label: "Smart View",
+    icon: <FaBrain />,
+    tone: "brand",
+    offTone: "blue",
+  },
+  {
+    value: "table",
+    label: "Table View",
+    icon: <FaTableList />,
+    tone: "brand",
+    offTone: "blue",
+  },
 ];
 
 export default function EmergencyTemplate() {
@@ -45,8 +64,11 @@ export default function EmergencyTemplate() {
   const [volume, setVolume] = useState(0); // 0 = Default
 
   const weight = parseWeight(weightStr);
-  const list = EMERGENCY_DRUGS.filter((d) => d[mode] && (!focused || d.id === focused.id));
-  if (mode === "infusion") list.sort((a, b) => a.infusion.order - b.infusion.order);
+  const list = EMERGENCY_DRUGS.filter(
+    (d) => d[mode] && (!focused || d.id === focused.id),
+  );
+  if (mode === "infusion")
+    list.sort((a, b) => a.infusion.order - b.infusion.order);
 
   return (
     <main className="min-h-dvh bg-blue-50/60">
@@ -66,14 +88,24 @@ export default function EmergencyTemplate() {
 
       {/* انتخاب حالت + وزن + نوع نمایش (ثابت نیست؛ همراه صفحه اسکرول می‌شود) */}
       <div className="space-y-4 border-b border-slate-200 bg-white px-4 pb-4 pt-4">
-        <SegmentedTabs options={MODES} value={mode} onChange={setMode} size="lg" />
+        <SegmentedTabs
+          options={MODES}
+          value={mode}
+          onChange={setMode}
+          size="lg"
+        />
         <WeightInput value={weightStr} onChange={setWeight} />
         <SegmentedTabs options={VIEWS} value={view} onChange={setView} />
       </div>
 
       {mode === "infusion" && (
         <div className="border-b border-slate-200 bg-white px-4 py-3">
-          <InfusionControls factor={factor} onFactor={setFactor} volume={volume} onVolume={setVolume} />
+          <InfusionControls
+            factor={factor}
+            onFactor={setFactor}
+            volume={volume}
+            onVolume={setVolume}
+          />
         </div>
       )}
 
@@ -106,10 +138,21 @@ export default function EmergencyTemplate() {
         {mode === "infusion" &&
           (view === "smart" ? (
             list.map((d) => (
-              <InfusionCard key={d.id} drug={d} weight={weight} factor={factor} volume={volume} />
+              <InfusionCard
+                key={d.id}
+                drug={d}
+                weight={weight}
+                factor={factor}
+                volume={volume}
+              />
             ))
           ) : list.length > 0 ? (
-            <InfusionTable drugs={list} weight={weight} factor={factor} volume={volume} />
+            <InfusionTable
+              drugs={list}
+              weight={weight}
+              factor={factor}
+              volume={volume}
+            />
           ) : null)}
       </div>
 
