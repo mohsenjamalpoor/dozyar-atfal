@@ -8,6 +8,29 @@
  */
 export const EMERGENCY_DRUGS = [
   {
+    id: "epinephrine",
+    name: "Epinephrine",
+    fa: "اپی‌نفرین",
+    alias: ["Adrenaline", "آدرنالین"],
+    bolus: {
+      dosePerKg: 0.01,
+      doseUnit: "mg",
+      maxDose: 1,
+      stockConc: 0.1,
+      stockLabel: "0.1 mg/mL (1:10,000)",
+      route: "IV / IO",
+      note: "ایست قلبی؛ تکرار هر ۳ تا ۵ دقیقه.",
+    },
+    infusion: {
+      range: [0.05, 1],
+      mgPerKg: 0.6,
+      defaultVolume: 100,
+      stockConc: 1,
+      stockLabel: "1 mg/mL ampoule",
+      rates: [1, 2, 5, 10],
+    },
+  },
+  {
     id: "adenosine",
     name: "Adenosine",
     fa: "آدنوزین",
@@ -110,29 +133,7 @@ export const EMERGENCY_DRUGS = [
       rates: [0.5, 1, 2, 4],
     },
   },
-  {
-    id: "epinephrine",
-    name: "Epinephrine",
-    fa: "اپی‌نفرین",
-    alias: ["Adrenaline", "آدرنالین"],
-    bolus: {
-      dosePerKg: 0.01,
-      doseUnit: "mg",
-      maxDose: 1,
-      stockConc: 0.1,
-      stockLabel: "0.1 mg/mL (1:10,000)",
-      route: "IV / IO",
-      note: "ایست قلبی؛ تکرار هر ۳ تا ۵ دقیقه.",
-    },
-    infusion: {
-      range: [0.05, 1],
-      mgPerKg: 0.6,
-      defaultVolume: 100,
-      stockConc: 1,
-      stockLabel: "1 mg/mL ampoule",
-      rates: [1, 2, 5, 10],
-    },
-  },
+
   {
     id: "midazolam",
     name: "Midazolam",
