@@ -15,7 +15,7 @@ export default function WeightInput({ value, onChange }) {
           inputMode="decimal"
           value={value}
           onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-          placeholder="Patient's Weight"
+          placeholder="وزن بیمار"
           aria-label="وزن بیمار (کیلوگرم)"
           className="w-full rounded-2xl border-2 border-brand-100 bg-brand-50/70 py-3.5 text-center text-lg font-semibold text-brand-900 outline-none transition placeholder:font-normal placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
         />
