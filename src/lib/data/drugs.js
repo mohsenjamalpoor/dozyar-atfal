@@ -18,7 +18,7 @@ export const DRUGS = [
     name: "Acetaminophen",
     fa: "استامینوفن",
     alias: ["Paracetamol", "پاراستامول", "تب بر"],
-    category: "مسکن و تب‌بر",
+    category: "مسکن و تب‌ بر",
     sideEffects: [
       "آسیب کبدی در مصرف بیش از حد مجاز",
       "حساسیت پوستی (نادر)",
@@ -39,7 +39,7 @@ export const DRUGS = [
       },
       {
         type: "ampoule",
-        strength: "300 mg / 2 mL",
+        strength: "150 mg / 1 mL",
         mgPerUnit: 150,
         unitLabel: "mL",
         dosePerKg: [10, 15],
