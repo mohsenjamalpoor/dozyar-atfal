@@ -44,8 +44,8 @@ export default function SegmentedTabs({
               active ? on : off
             }`}
           >
-            <span>{o.label}</span>
             {o.icon}
+            <span>{o.label}</span>
           </button>
         );
       })}

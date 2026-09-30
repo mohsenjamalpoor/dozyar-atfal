@@ -25,7 +25,7 @@ import EmergencyFooter from "@/components/modules/EmergencyFooter";
 const GUIDE_HREF = "/drugs";
 
 const MODES = [
-  { value: "infusion", label: "INFUSION", icon: <FaDroplet />, tone: "brand" },
+  { value: "infusion", label: "انفوزیون", icon: <FaDroplet />, tone: "brand" },
   { value: "bolus", label: "STAT BOLUS", icon: <FaBolt />, tone: "red" },
 ];
 
